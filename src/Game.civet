@@ -1,9 +1,19 @@
-import {createMemo, For} from 'solid-js'
+{For, createMemo, onMount} from 'solid-js'
+{createMutable} from 'solid-js/store'
+
+interface Square
+  i: number
+  x: number
+  y: number
 
 export function Game(props: {n: number})
-  squares := createMemo =>
+  state := createMemo =>
     {n} := props
-    squares := []
+    squares: Square[] := [
+      i: 0 // empty
+      x: n - 1
+      y: n - 1
+    ]
     for each i of [0...n]
       for each j of [0...n]
         continue if i == j == n-1
@@ -11,7 +21,37 @@ export function Game(props: {n: number})
           i: i*n + j + 1
           y: i
           x: j
-    squares
+    location: Record<string, Square> := {}
+    location[`${square.x},${square.y}`] = square for each square of squares
+    createMutable {squares, location}
+
+  onMount =>
+    window.addEventListener 'keydown', (e) =>
+      // Motion for blank space
+      dx .= 0
+      dy .= 0
+      switch e.key
+        when 'ArrowUp'
+          dy = +1
+        when 'ArrowDown'
+          dy = -1
+        when 'ArrowLeft'
+          dx = +1
+        when 'ArrowRight'
+          dx = -1
+      if dx or dy
+        empty := state().squares.0
+        newX := empty.x + dx
+        newY := empty.y + dy
+        return unless 0 <= newX < props.n and 0 <= newY < props.n
+        square := state().location[`${newX},${newY}`]
+        state().location[`${newX},${newY}`] = empty
+        state().location[`${empty.x},${empty.y}`] = square
+        square.x = empty.x
+        square.y = empty.y
+        empty.x = newX
+        empty.y = newY
+        e.preventDefault()
 
   fillFrac := 0.9
   shift := createMemo => (1 - fillFrac) / props.n * 100 / 2
@@ -20,8 +60,8 @@ export function Game(props: {n: number})
     "--font-size": `clamp(1rem, ${80 * fillFrac / props.n}vmin - 40px, 100rem)`
     transform: `translate(${shift()}%, ${shift()}%)`
   }>
-    <For each=squares()>
-      (square) =>
+    <For each=state().squares>
+      (square) => square.i and
         <div .square style={
           transform: `translate(${square.x * 100 / fillFrac}%, ${square.y * 100 / fillFrac}%)`
         }>
