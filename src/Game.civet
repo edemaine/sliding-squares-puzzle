@@ -1,4 +1,4 @@
-{For, createMemo, onMount} from 'solid-js'
+{For, createMemo, createRenderEffect, on, onMount} from 'solid-js'
 {createMutable} from 'solid-js/store'
 
 interface Square
@@ -7,9 +7,13 @@ interface Square
   y: number
 
 export function Game(props: {n: number})
-  state := createMemo =>
+  state := createMutable
+    squares: [] as Square[]
+    location: {} as Record<string, Square>
+
+  createRenderEffect on (=> props.n), =>
     {n} := props
-    squares: Square[] := [
+    state.squares = [
       i: 0 // empty
       x: n - 1
       y: n - 1
@@ -17,14 +21,20 @@ export function Game(props: {n: number})
     for each i of [0...n]
       for each j of [0...n]
         continue if i == j == n-1
-        squares.push
+        state.squares.push
           i: i*n + j + 1
           y: i
           x: j
-    location: Record<string, Square> := {}
-    location[`${square.x},${square.y}`] = square for each square of squares
-    createMutable {squares, location}
+    state.location = {}
+    for each square of state.squares
+      state.location[`${square.x},${square.y}`] = square
 
+  function randomize()
+    loop
+      for each i of [0...n]
+        for each j of [0...n]
+          state.squares
+  
   onMount =>
     window.addEventListener 'keydown', (e) =>
       // Motion for blank space
@@ -40,13 +50,13 @@ export function Game(props: {n: number})
         when 'ArrowRight'
           dx = -1
       if dx or dy
-        empty := state().squares.0
+        empty := state.squares.0
         newX := empty.x + dx
         newY := empty.y + dy
         return unless 0 <= newX < props.n and 0 <= newY < props.n
-        square := state().location[`${newX},${newY}`]
-        state().location[`${newX},${newY}`] = empty
-        state().location[`${empty.x},${empty.y}`] = square
+        square := state.location[`${newX},${newY}`]
+        state.location[`${newX},${newY}`] = empty
+        state.location[`${empty.x},${empty.y}`] = square
         square.x = empty.x
         square.y = empty.y
         empty.x = newX
@@ -60,8 +70,8 @@ export function Game(props: {n: number})
     "--font-size": `clamp(1rem, ${80 * fillFrac / props.n}vmin - 40px, 100rem)`
     transform: `translate(${shift()}%, ${shift()}%)`
   }>
-    <For each=state().squares>
-      (square) => square.i and
+    <For each=state.squares>
+      (square) => if square.i
         <div .square style={
           transform: `translate(${square.x * 100 / fillFrac}%, ${square.y * 100 / fillFrac}%)`
         }>
