@@ -104,16 +104,16 @@ export function Game(props: {n: number})
         e.preventDefault()
 
   fillFrac := 0.9
-  shift := createMemo => (1 - fillFrac) / props.n * 100 / 2
+  shift := createMemo =>
+    (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
   <div .game style={
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${80 * fillFrac / props.n}vmin - 40px, 100rem)`
-    transform: `translate(${shift()}%, ${shift()}%)`
   }>
     <For each=state.squares>
       (square) => if square.i
         <div .square style={
-          transform: `translate(${square.x * 100 / fillFrac}%, ${square.y * 100 / fillFrac}%)`
+          transform: `translate(${square.x * 100 / fillFrac + shift()}%, ${square.y * 100 / fillFrac + shift()}%)`
         }>
           <span .number>{square.i}
-  ||> .randomize = randomize
+  ||> &!.randomize = randomize
