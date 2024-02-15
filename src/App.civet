@@ -6,10 +6,12 @@ export function App
   game := createMemo => Game {n()}
 
   <header>
-    <i>n</i><sup>2</sup>&thinsp;&minus;&thinsp;1 Sliding Squares Puzzle, <i>n</i> ={' '}
+    {n()}<sup>2</sup>&thinsp;&minus;&thinsp;1 = {n()**2-1} Sliding Squares Puzzle
   <main>
     {game()}
   <footer>
+    <span>
+      <i>n</i>&nbsp;=&nbsp;<input #n type="number" min="2" value="3" onInput={(e) => setN e.target.valueAsNumber}>
     <span .buttons>
       <button onClick={(e) => game().randomize true}>Random Solvable
       <button onClick={(e) => game().randomize false}>Random Unsolvable

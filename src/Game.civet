@@ -48,7 +48,7 @@ export function Game(props: {n: number})
   function randomize(wantSolvable: boolean): void
     batch =>
       {n} := props
-      loop
+      for count in [0...100]
         move state.squares.0, n-1, n-1
         remaining := state.squares[1..]
         for each y of [0...n]
@@ -61,7 +61,8 @@ export function Game(props: {n: number})
             remaining[i] = popped if i < remaining.length
             // Place
             move square, x, y
-        break if isSolvable() xnor wantSolvable
+        return if isSolvable() xnor wantSolvable
+      console.log "Extremely unlucky: 100 failed trials"
 
   // https://en.wikipedia.org/wiki/15_Puzzle#Solvability
   // The invariant is the parity of the permutation of all 16 squares plus the
@@ -69,13 +70,13 @@ export function Game(props: {n: number})
   // the empty square from the lower right corner.
   function isSolvable(): boolean
     {n} := props
+    return true if n <= 1
     pi := []
     for each y of [0...n]
       for each x of [0...n]
         pi.push state.location[`${x},${y}`].i
     inversions := countInversions pi
     taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
-    console.log inversions, taxicab, (inversions + taxicab)
     (inversions + taxicab) % 2 is 0
   
   onMount =>
