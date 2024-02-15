@@ -6,34 +6,74 @@ interface Square
   x: number
   y: number
 
+// TODO: Linear time algorithm by following cycles
+// https://stackoverflow.com/a/20703469/7797661
+function countInversions(pi: number[]): number
+  n := pi.length
+  inversions .= 0
+  for i in [0...n]
+    for j in [i+1...n]
+      inversions++ if pi[i] > pi[j]
+  inversions
+
 export function Game(props: {n: number})
   state := createMutable
     squares: [] as Square[]
     location: {} as Record<string, Square>
 
+  function move(square: Square, x?: number, y?: number): void
+    square.x = x if x?
+    square.y = y if y?
+    state.location[`${square.x},${square.y}`] = square
+
   createRenderEffect on (=> props.n), =>
     {n} := props
+    state.location = {}
     state.squares = [
       i: 0 // empty
       x: n - 1
       y: n - 1
     ]
-    for each i of [0...n]
-      for each j of [0...n]
-        continue if i == j == n-1
-        state.squares.push
-          i: i*n + j + 1
-          y: i
-          x: j
-    state.location = {}
-    for each square of state.squares
-      state.location[`${square.x},${square.y}`] = square
+    for each y of [0...n]
+      for each x of [0...n]
+        continue if x is y is n-1
+        square := {
+          i: y*n + x + 1
+          x, y
+        }
+        state.squares.push square
+    move square for each square of state.squares
+    randomize true
 
-  function randomize()
+  function randomize(wantSolvable: boolean): void
+    {n} := props
     loop
-      for each i of [0...n]
-        for each j of [0...n]
-          state.squares
+      remaining := state.squares[1..]
+      for each y of [0...n]
+        for each x of [0...n]
+          continue if x is y is n-1
+          // Choose random remaining square
+          i := Math.floor Math.random() * remaining.length
+          square := remaining[i]
+          popped := remaining.pop()!
+          remaining[i] = popped if i < remaining.length
+          // Place
+          move square, x, y
+      break if isSolvable() xnor wantSolvable
+
+  // https://en.wikipedia.org/wiki/15_Puzzle#Solvability
+  // The invariant is the parity of the permutation of all 16 squares plus the
+  // parity of the taxicab distance (number of rows plus number of columns) of
+  // the empty square from the lower right corner.
+  function isSolvable(): boolean
+    {n} := props
+    pi := []
+    for each y of [0...n]
+      for each x of [0...n]
+        pi.push state.location[`${x},${y}`].i
+    inversions := countInversions pi
+    taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
+    (inversions + taxicab) % 2 is 0
   
   onMount =>
     window.addEventListener 'keydown', (e) =>
@@ -55,12 +95,8 @@ export function Game(props: {n: number})
         newY := empty.y + dy
         return unless 0 <= newX < props.n and 0 <= newY < props.n
         square := state.location[`${newX},${newY}`]
-        state.location[`${newX},${newY}`] = empty
-        state.location[`${empty.x},${empty.y}`] = square
-        square.x = empty.x
-        square.y = empty.y
-        empty.x = newX
-        empty.y = newY
+        move square, empty.x, empty.y
+        move empty, newX, newY
         e.preventDefault()
 
   fillFrac := 0.9
