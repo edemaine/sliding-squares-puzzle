@@ -1,0 +1,28 @@
+import {createMemo, For} from 'solid-js'
+
+export function Game(props: {n: number})
+  squares := createMemo =>
+    {n} := props
+    squares := []
+    for each i of [0...n]
+      for each j of [0...n]
+        continue if i == j == n-1
+        squares.push
+          i: i*n + j + 1
+          y: i
+          x: j
+    squares
+
+  fillFrac := 0.9
+  shift := createMemo => (1 - fillFrac) / props.n * 100 / 2
+  <div .game style={
+    "--square-size": `calc(${100 * fillFrac / props.n}%)`
+    "--font-size": `clamp(1rem, ${80 * fillFrac / props.n}vmin - 40px, 100rem)`
+    transform: `translate(${shift()}%, ${shift()}%)`
+  }>
+    <For each=squares()>
+      (square) =>
+        <div .square style={
+          transform: `translate(${square.x * 100 / fillFrac}%, ${square.y * 100 / fillFrac}%)`
+        }>
+          <span .number>{square.i}

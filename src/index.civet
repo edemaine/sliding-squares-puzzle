@@ -1,7 +1,7 @@
 /* @refresh reload */
 { render } from 'solid-js/web'
 
-import './index.css'
-App from './App.civet'
+import './index.sass'
+{App} from './App.civet'
 
-render () => <App />, document.getElementById('root') as HTMLElement
+render () => <App/>, document.getElementById('root') as HTMLElement
