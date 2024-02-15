@@ -1,14 +1,16 @@
-import {createSignal} from 'solid-js'
+import {createMemo, createSignal} from 'solid-js'
 {Game} from './Game.civet'
 
 export function App
   [n, setN] := createSignal 3
+  game := createMemo => Game {n()}
 
   <header>
     <i>n</i><sup>2</sup>&thinsp;&minus;&thinsp;1 Sliding Squares Puzzle, <i>n</i> ={' '}
-    <input #n type="number" min="2" value="3"
-     onChange={(e) => setN e.currentTarget.valueAsNumber}>
   <main>
-    <Game {n()}/>
+    {game()}
   <footer>
+    <span .buttons>
+      <button onClick={(e) => game().randomize true}>Random Solvable
+      <button onClick={(e) => game().randomize false}>Random Unsolvable
     <a href="https://github.com/edemaine/sliding-squares-puzzle">Source code on GitHub</a>

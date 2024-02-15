@@ -43,7 +43,7 @@ export function Game(props: {n: number})
         }
         state.squares.push square
     move square for each square of state.squares
-    randomize true
+    setTimeout (=> randomize true), 0
 
   function randomize(wantSolvable: boolean): void
     {n} := props
@@ -73,6 +73,7 @@ export function Game(props: {n: number})
         pi.push state.location[`${x},${y}`].i
     inversions := countInversions pi
     taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
+    console.log inversions, taxicab, (inversions + taxicab)
     (inversions + taxicab) % 2 is 0
   
   onMount =>
@@ -112,3 +113,4 @@ export function Game(props: {n: number})
           transform: `translate(${square.x * 100 / fillFrac}%, ${square.y * 100 / fillFrac}%)`
         }>
           <span .number>{square.i}
+  ||> .randomize = randomize
