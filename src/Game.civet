@@ -1,4 +1,4 @@
-{For, createMemo, createRenderEffect, on, onMount} from 'solid-js'
+{For, batch, createMemo, createRenderEffect, on, onMount} from 'solid-js'
 {createMutable} from 'solid-js/store'
 
 interface Square
@@ -11,7 +11,7 @@ interface Square
 function countInversions(pi: number[]): number
   n := pi.length
   inversions .= 0
-  for i in [0...n]
+  for i in [0...n-1]
     for j in [i+1...n]
       inversions++ if pi[i] > pi[j]
   inversions
@@ -46,20 +46,22 @@ export function Game(props: {n: number})
     setTimeout (=> randomize true), 0
 
   function randomize(wantSolvable: boolean): void
-    {n} := props
-    loop
-      remaining := state.squares[1..]
-      for each y of [0...n]
-        for each x of [0...n]
-          continue if x is y is n-1
-          // Choose random remaining square
-          i := Math.floor Math.random() * remaining.length
-          square := remaining[i]
-          popped := remaining.pop()!
-          remaining[i] = popped if i < remaining.length
-          // Place
-          move square, x, y
-      break if isSolvable() xnor wantSolvable
+    batch =>
+      {n} := props
+      loop
+        move state.squares.0, n-1, n-1
+        remaining := state.squares[1..]
+        for each y of [0...n]
+          for each x of [0...n]
+            continue if x is y is n-1
+            // Choose random remaining square
+            i := Math.floor Math.random() * remaining.length
+            square := remaining[i]
+            popped := remaining.pop()!
+            remaining[i] = popped if i < remaining.length
+            // Place
+            move square, x, y
+        break if isSolvable() xnor wantSolvable
 
   // https://en.wikipedia.org/wiki/15_Puzzle#Solvability
   // The invariant is the parity of the permutation of all 16 squares plus the
