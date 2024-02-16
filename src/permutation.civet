@@ -1,0 +1,41 @@
+export function identity(n: number): number[]
+  for each i of [0...n]
+    i
+
+// In-place shuffle of array.  Returns the same array.
+// https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+export function shuffle<T>(array: T[]): T[]
+  return array unless array.length > 1
+  for each i of [array.length-1..1]
+    j := Math.floor Math.random() * (i + 1)
+    unless i is j
+      [array[i], array[j]] = [array[j], array[i]]
+  array
+
+export function countInversions(pi: number[]): number
+  n := pi.length
+  inversions .= 0
+  for each i of [0...n-1]
+    for each j of [i+1...n]
+      inversions++ if pi[i] > pi[j]
+  inversions
+
+export function isOddQuadratic(pi: number[]): boolean
+  countInversions(pi) % 2 is 1
+
+// Linear-time algorithm from https://stackoverflow.com/a/20703469/7797661
+export function isOdd(pi: number[]): boolean
+  n := pi.length
+  visited: (undefined | boolean)[] := []
+  parity .= 0
+  for each i of [0...n-1]
+    continue if visited[i]
+    visited[i] = true
+    j .= pi[i]
+    length .= 1
+    until i is j
+      visited[j] = true
+      j = pi[j]
+      length++
+    parity += length - 1
+  parity % 2 is 1

@@ -1,0 +1,9 @@
+{describe, it, expect} from 'vitest'
+{identity, shuffle, isOdd, isOddQuadratic} from '/src/permutation.civet'
+
+describe 'permutation', :void =>
+  for n of [5, 10, 20, 100]
+    it `quadratic and linear parity algorithms should match ${n}`, =>
+      for attempt of [0...100]
+        pi := shuffle identity n
+        expect(isOdd pi).toBe(isOddQuadratic pi)

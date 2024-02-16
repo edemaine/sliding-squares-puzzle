@@ -16,4 +16,8 @@ export default defineConfig({
   build: {
     target: 'esnext',
   },
+  test: {
+    environment: 'node',
+    include: '*.test.civet',
+  },
 })

@@ -1,20 +1,11 @@
 {For, batch, createMemo, createRenderEffect, on, onMount} from 'solid-js'
 {createMutable} from 'solid-js/store'
+{shuffle, isOdd} from './permutation.civet'
 
 interface Square
   i: number
   x: number
   y: number
-
-// TODO: Linear time algorithm by following cycles
-// https://stackoverflow.com/a/20703469/7797661
-function countInversions(pi: number[]): number
-  n := pi.length
-  inversions .= 0
-  for i in [0...n-1]
-    for j in [i+1...n]
-      inversions++ if pi[i] > pi[j]
-  inversions
 
 export function Game(props: {n: number})
   state := createMutable
@@ -49,18 +40,13 @@ export function Game(props: {n: number})
     batch =>
       {n} := props
       for count in [0...100]
-        move state.squares.0, n-1, n-1
-        remaining := state.squares[1..]
+        permutation := shuffle state.squares[..]
+        holeX := Math.random() * n
+        holeY := Math.random() * n
+        i .= 0
         for each y of [0...n]
           for each x of [0...n]
-            continue if x is y is n-1
-            // Choose random remaining square
-            i := Math.floor Math.random() * remaining.length
-            square := remaining[i]
-            popped := remaining.pop()!
-            remaining[i] = popped if i < remaining.length
-            // Place
-            move square, x, y
+            move permutation[i++], x, y
         return if isSolvable() xnor wantSolvable
       console.log "Extremely unlucky: 100 failed trials"
 
@@ -75,7 +61,7 @@ export function Game(props: {n: number})
     for each y of [0...n]
       for each x of [0...n]
         pi.push state.location[`${x},${y}`].i
-    inversions := countInversions pi
+    inversions := +isOdd pi
     taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
     (inversions + taxicab) % 2 is 0
   
