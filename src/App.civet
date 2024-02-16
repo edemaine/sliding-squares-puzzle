@@ -1,14 +1,29 @@
-import {createMemo, createSignal} from 'solid-js'
+import {createMemo, createSignal, onMount} from 'solid-js'
 {Game} from './Game.civet'
 
 export function App
   [n, setN] := createSignal 3
   game := createMemo => Game {n()}
+  [mainSize, setMainSize] := createSignal<number | undefined>()
+  let main: HTMLElement
+
+  onMount =>
+    new ResizeObserver (entries) =>
+      for entry of entries
+        size := entry.borderBoxSize[0]
+        setMainSize Math.min size.inlineSize, size.blockSize
+    ||> .observe main
 
   <header>
     {n()}<sup>2</sup>&thinsp;&minus;&thinsp;1 = {n()**2-1} Sliding Squares Puzzle
-  <main>
-    {game()}
+  <main ref=main! style={
+    '--main-size': if mainSize() then `${mainSize()}px`
+  }>
+    <div .container style={
+      'width': `min(100%, ${mainSize()}px)`
+      'height': `min(100%, ${mainSize()}px)`
+    }>
+      {game()}
   <footer>
     <span>
       <i>n</i>&nbsp;=&nbsp;<input #n type="number" min="2" value="3" onInput={(e) => setN e.target.valueAsNumber}>

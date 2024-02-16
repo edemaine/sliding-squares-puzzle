@@ -94,7 +94,7 @@ export function Game(props: {n: number})
     (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
   <div .game style={
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
-    "--font-size": `clamp(1rem, ${80 * fillFrac / props.n}vmin - 40px, 100rem)`
+    "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
   }>
     <For each=state.squares>
       (square) => if square.i
