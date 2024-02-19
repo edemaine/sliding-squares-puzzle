@@ -15,7 +15,7 @@ export function App
     ||> .observe main
 
   <header>
-    {n()}<sup>2</sup>&thinsp;&minus;&thinsp;1 = {n()**2-1} Sliding Squares Puzzle
+    {n()}<sup>2</sup>&thinsp;&minus;&thinsp;1 = {n()**2-1} Puzzle
   <main ref=main! style={
     '--main-size': if mainSize() then `${mainSize()}px`
   }>
