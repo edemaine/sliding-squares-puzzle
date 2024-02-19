@@ -17,6 +17,12 @@ export function Game(props: {n: number})
     square.y = y if y?
     state.location[`${square.x},${square.y}`] = square
 
+  function swap(square1: Square, square2: Square): void
+    [square1.x, square2.x] = [square2.x, square1.x]
+    [square1.y, square2.y] = [square2.y, square1.y]
+    move square1
+    move square2
+
   createRenderEffect on (=> props.n), =>
     {n} := props
     state.location = {}
@@ -64,6 +70,19 @@ export function Game(props: {n: number})
     inversions := +isOdd pi
     taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
     (inversions + taxicab) % 2 is 0
+
+  function onClick(e: MouseEvent): void
+    element := (e.target as HTMLElement)?.closest?('.square') as HTMLElement
+    return unless element?
+    {i} := element.dataset
+    return unless i?
+    square := state.squares[+i]
+    return unless square?
+    empty := state.squares.0
+    dx := square.x - empty.x
+    dy := square.y - empty.y
+    return unless Math.abs(dx) + Math.abs(dy) is 1
+    swap square, empty
   
   onMount =>
     window.addEventListener 'keydown', (e) =>
@@ -95,11 +114,11 @@ export function Game(props: {n: number})
   <div .game style={
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
-  }>
+  } {onClick}>
     <For each=state.squares>
       (square) => if square.i
         <div .square style={
           transform: `translate(${square.x * 100 / fillFrac + shift()}%, ${square.y * 100 / fillFrac + shift()}%)`
-        }>
+        } data-i={square.i}>
           <span .number>{square.i}
   ||> &!.randomize = randomize
