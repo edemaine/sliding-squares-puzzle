@@ -1,4 +1,4 @@
-{For, batch, createMemo, createRenderEffect, on, onMount} from 'solid-js'
+{type JSX, For, batch, createMemo, createRenderEffect, on, onMount} from 'solid-js'
 {createMutable} from 'solid-js/store'
 {shuffle, isOdd} from './permutation.civet'
 
@@ -7,7 +7,9 @@ interface Square
   x: number
   y: number
 
-export function Game(props: {n: number})
+type GameType = JSX.Element & {randomize: (wantSolvable: boolean) => void}
+
+export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvable: boolean) => void}
   state := createMutable
     squares: [] as Square[]
     location: {} as Record<string, Square>
@@ -22,6 +24,9 @@ export function Game(props: {n: number})
     [square1.y, square2.y] = [square2.y, square1.y]
     move square1
     move square2
+
+  function empty: Square
+    state.squares.0
 
   createRenderEffect on (=> props.n), =>
     {n} := props
@@ -68,8 +73,14 @@ export function Game(props: {n: number})
       for each x of [0...n]
         pi.push state.location[`${x},${y}`].i
     inversions := +isOdd pi
-    taxicab := (n-1 - state.squares.0.x) + (n-1 - state.squares.0.y)
+    taxicab := (n-1 - empty().x) + (n-1 - empty().y)
     (inversions + taxicab) % 2 is 0
+
+  function nextToEmpty(square: Square): {dx: number, dy: number} | undefined
+    dx := square.x - empty().x
+    dy := square.y - empty().y
+    if Math.abs(dx) + Math.abs(dy) is 1
+      {dx, dy}
 
   function onClick(e: MouseEvent): void
     element := (e.target as HTMLElement)?.closest?('.square') as HTMLElement
@@ -78,11 +89,8 @@ export function Game(props: {n: number})
     return unless i?
     square := state.squares[+i]
     return unless square?
-    empty := state.squares.0
-    dx := square.x - empty.x
-    dy := square.y - empty.y
-    return unless Math.abs(dx) + Math.abs(dy) is 1
-    swap square, empty
+    if nextToEmpty square
+      swap square, empty()
   
   onMount =>
     window.addEventListener 'keydown', (e) =>
@@ -99,18 +107,17 @@ export function Game(props: {n: number})
         when 'ArrowRight'
           dx = -1
       if dx or dy
-        empty := state.squares.0
-        newX := empty.x + dx
-        newY := empty.y + dy
+        newX := empty().x + dx
+        newY := empty().y + dy
         return unless 0 <= newX < props.n and 0 <= newY < props.n
         square := state.location[`${newX},${newY}`]
-        move square, empty.x, empty.y
-        move empty, newX, newY
+        swap square, empty()
         e.preventDefault()
 
   fillFrac := 0.9
   shift := createMemo =>
     (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
+  m1 := -1
   <div .game style={
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
@@ -119,6 +126,13 @@ export function Game(props: {n: number})
       (square) => if square.i
         <div .square style={
           transform: `translate(${square.x * 100 / fillFrac + shift()}%, ${square.y * 100 / fillFrac + shift()}%)`
+          cursor: switch nextToEmpty square
+            ^undefined then ''
+            {dx:   1} then 'w-resize'
+            {dx: ^m1} then 'e-resize'
+            {dy:   1} then 'n-resize'
+            {dy: ^m1} then 's-resize'
         } data-i={square.i}>
           <span .number>{square.i}
+  |> as GameType
   ||> &!.randomize = randomize
