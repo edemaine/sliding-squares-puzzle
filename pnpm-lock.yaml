@@ -11,8 +11,8 @@ dependencies:
 
 devDependencies:
   '@danielx/civet':
-    specifier: ^0.6.72
-    version: 0.6.72(typescript@5.3.3)
+    specifier: ^0.6.79
+    version: 0.6.79(typescript@5.3.3)
   gh-pages:
     specifier: ^6.1.1
     version: 6.1.1
@@ -262,8 +262,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@danielx/civet@0.6.72(typescript@5.3.3):
-    resolution: {integrity: sha512-jumnIbXbdFs0ZiKN62fmD+p8QGi+E0jmtc02dKz9wIIoPkODsa4XXlBrS5BRR5fr3w5d3ah8Vq7gWt+DL9Wa0Q==}
+  /@danielx/civet@0.6.79(typescript@5.3.3):
+    resolution: {integrity: sha512-AVlpk/sWugRpuZ2VMvBDhR7dEdP47ejFKr3YfAfI/mHwXmUVhK7hJr+3ItVXqsqQKGrGN2kw3esF5fxvyTWrxA==}
     engines: {node: '>=19 || ^18.6.0 || ^16.17.0'}
     hasBin: true
     peerDependencies:
@@ -537,7 +537,7 @@ packages:
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
-      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
   /@rollup/rollup-android-arm-eabi@4.11.0:

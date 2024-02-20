@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     civetPlugin({
       ts: "preserve",
+      //typecheck: true,
     }),
     solidPlugin(),
   ],
@@ -18,6 +19,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: '*.test.civet',
+    include: 'test/*.test.civet',
   },
 })

@@ -1,5 +1,5 @@
 {describe, it, expect} from 'vitest'
-{identity, shuffle, isOdd, isOddQuadratic} from '/src/permutation.civet'
+{identity, shuffle, isOdd, isOddQuadratic} from '../src/permutation.civet'
 
 describe 'permutation', :void =>
   for n of [5, 10, 20, 100]
