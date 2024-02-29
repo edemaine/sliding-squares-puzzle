@@ -7,6 +7,19 @@ any <i>n</i><sup>2</sup>&nbsp;&minus;&nbsp;1 puzzle,
 a sliding-block puzzle
 featuring an <i>n</i>&times;<i>n</i> grid of squares,
 where all but one square has a unique block.
+The goal is to put the squares in increasing "reading" order:
+1 in the top-left, 2 to the right of that, and so on.
+
+Half of the possible starting positions are solvable,
+and half are not.
+There's a button to generate either type of starting position,
+depending on what you'd like to illustrate.
+
+You can tell
+[whether a puzzle is solvable](https://en.wikipedia.org/wiki/15_Puzzle#Solvability)
+in [linear time](https://en.wikipedia.org/wiki/15_Puzzle#Solvability).
+But finding the *shortest* solution (fewest moves)
+[is NP-hard](https://erikdemaine.org/papers/FifteenPuzzle_TCS/).
 
 ## Technology
 
