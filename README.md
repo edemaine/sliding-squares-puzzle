@@ -1,40 +1,47 @@
-# Solid Template with Civet
+# <i>n</i><sup>2</sup>&nbsp;&minus;&nbsp;1 Sliding Squares Puzzle
 
-A template for [Solid](https://solidjs.com) with [Civet](https://github.com/DanielXMoore/Civet).
+This is a video-game implementation of the
+[15-puzzle](https://en.wikipedia.org/wiki/15_Puzzle),
+8-puzzle, or more generally,
+any <i>n</i><sup>2</sup>&nbsp;&minus;&nbsp;1 puzzle,
+a sliding-block puzzle
+featuring an <i>n</i>&times;<i>n</i> grid of squares,
+where all but one square has a unique block.
 
-The Vite plugin for Civet is taken from https://github.com/lorefnon/vite-plugin-civet
+## Technology
 
-## Usage
+This implementation is written in the
+[Civet](https://github.com/DanielXMoore/Civet) programming language
+using the [Solid](https://solidjs.com) web framework,
+[Vite](https://vitejs.dev/) bundler, and
+[Vitest](https://vitest.dev/) testing framework.
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+Most notably, it uses
+[CSS transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_transitions/Using_CSS_transitions)
+to achieve smooth animations of piece slides.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Local Development
 
 ```bash
-$ npm install # or pnpm install or yarn install
+$ pnpm install # or npm install or yarn install
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+Then you can use the following scripts:
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm dev` or `npm start`
+### `pnpm dev` or `pnpm start`
 
 Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.<br>
+The page will reload if you make edits.
 
-The page will reload if you make edits.<br>
-
-### `npm run build`
+### `pnpm run build`
 
 Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+Bundles Solid in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-## Deployment
+### `pnpm test`
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+Runs some built-in tests in Vitest.
