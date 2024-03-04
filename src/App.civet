@@ -1,11 +1,13 @@
-import {createMemo, createSignal, onMount} from 'solid-js'
-{Game} from './Game.civet'
+import {Show, createSignal, onMount} from 'solid-js'
+{Game, type GameType} from './Game.civet'
 
 export function App
   [n, setN] := createSignal 3
-  game := createMemo => Game {n()}
+  let game: GameType
   [mainSize, setMainSize] := createSignal<number | undefined>()
   let main: HTMLElement
+  [potential, setPotential] := createSignal ''
+  [potentialValue, setPotentialValue] := createSignal<number | undefined>()
 
   onMount =>
     new ResizeObserver (entries) =>
@@ -23,11 +25,20 @@ export function App
       'width': `min(100%, ${mainSize()}px)`
       'height': `min(100%, ${mainSize()}px)`
     }>
-      {game()}
+      <Show when={n()} keyed>
+        (n) =>
+          <Game ref={(g) => game = g} {n} {potential()} {setPotentialValue} />
   <footer>
     <span>
       <i>n</i>&nbsp;=&nbsp;<input #n type="number" min="2" value="3" onInput={(e) => setN e.target.valueAsNumber}>
     <span .buttons>
-      <button onClick={(e) => game().randomize true}>Random Solvable
-      <button onClick={(e) => game().randomize false}>Random Unsolvable
+      <button onClick={(e) => game.randomize true}>Random Solvable
+      <button onClick={(e) => game.randomize false}>Random Unsolvable
+    <span .potential>
+      <select name="potential"
+       onInput={(e) => setPotential e.currentTarget.value}>
+        <option value="">Potential function
+        <option value="invNoEmpty"># inversions, ignoring empty
+      <Show when={potentialValue()}>
+        (value) => <span .value> = {value()}
     <a href="https://github.com/edemaine/sliding-squares-puzzle">Source code on GitHub</a>

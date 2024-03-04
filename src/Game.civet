@@ -1,15 +1,20 @@
 {type JSX, For, batch, createMemo, createRenderEffect, on, onMount} from 'solid-js'
 {createMutable} from 'solid-js/store'
-{shuffle, isOdd} from './permutation.civet'
+{shuffle, isOdd, countInversions} from './permutation.civet'
 
 interface Square
   i: number
   x: number
   y: number
 
-type GameType = JSX.Element & {randomize: (wantSolvable: boolean) => void}
+export type GameType = JSX.Element & {randomize: (wantSolvable: boolean) => void}
 
-export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvable: boolean) => void}
+export function Game(props: {
+  n: number
+  ref: (game: GameType) => void
+  potential: string
+  setPotentialValue: (value: number | undefined) => void
+}): JSX.Element & {randomize: (wantSolvable: boolean) => void}
   state := createMutable
     squares: [] as Square[]
     location: {} as Record<string, Square>
@@ -47,6 +52,13 @@ export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvabl
     move square for each square of state.squares
     setTimeout (=> randomize true), 0
 
+  createRenderEffect =>
+    {n, potential, setPotentialValue} := props
+    setPotentialValue
+      switch potential
+        when 'invNoEmpty'
+          countInversions toPermutation().filter (&)
+
   function randomize(wantSolvable: boolean): void
     batch =>
       {n} := props
@@ -61,6 +73,14 @@ export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvabl
         return if isSolvable() xnor wantSolvable
       console.log "Extremely unlucky: 100 failed trials"
 
+  function toPermutation(): number[]
+    {n} := props
+    pi := []
+    for each y of [0...n]
+      for each x of [0...n]
+        pi.push state.location[`${x},${y}`].i
+    pi
+
   // https://en.wikipedia.org/wiki/15_Puzzle#Solvability
   // The invariant is the parity of the permutation of all 16 squares plus the
   // parity of the taxicab distance (number of rows plus number of columns) of
@@ -68,10 +88,7 @@ export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvabl
   function isSolvable(): boolean
     {n} := props
     return true if n <= 1
-    pi := []
-    for each y of [0...n]
-      for each x of [0...n]
-        pi.push state.location[`${x},${y}`].i
+    pi := toPermutation()
     inversions := +isOdd pi
     taxicab := (n-1 - empty().x) + (n-1 - empty().y)
     (inversions + taxicab) % 2 is 0
@@ -118,6 +135,7 @@ export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvabl
   shift := createMemo =>
     (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
   m1 := -1
+
   <div .game style={
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
@@ -136,3 +154,4 @@ export function Game(props: {n: number}): JSX.Element & {randomize: (wantSolvabl
           <span .number>{square.i}
   |> as GameType
   ||> &!.randomize = randomize
+  ||> props.ref
