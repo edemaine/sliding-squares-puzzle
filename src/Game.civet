@@ -57,7 +57,7 @@ export function Game(props: {
     setPotentialValue
       switch potential
         when 'invNoEmpty'
-          countInversions toPermutation().filter (&)
+          countInversions toPermutation().filter &
 
   function randomize(wantSolvable: boolean): void
     batch =>
