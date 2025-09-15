@@ -4,10 +4,10 @@ import {Show, createSignal, onMount} from 'solid-js'
 export function App
   [n, setN] := createSignal 3
   let game: GameType
-  [mainSize, setMainSize] := createSignal<number | undefined>()
+  [mainSize, setMainSize] := createSignal<number?>()
   let main: HTMLElement
   [potential, setPotential] := createSignal ''
-  [potentialValue, setPotentialValue] := createSignal<number | undefined>()
+  [potentialValue, setPotentialValue] := createSignal<number?>()
 
   onMount =>
     new ResizeObserver (entries) =>

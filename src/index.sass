@@ -53,6 +53,12 @@ main
   width: 100%
   height: 100%
   position: relative
+  background-color: black
+  transition: background-color 1s ease-in-out
+.solved
+  background-color: green
+.near.solved
+  background-color: red
 
 .square
   position: absolute
@@ -65,13 +71,16 @@ main
   flex-direction: column
   align-items: center
   justify-items: center
-  transition-property: transform
+  transition-property: transform, box-shadow
   transition-duration: 0.5s
   user-select: none
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0)
 .number
   font-weight: bold
   font-size: var(--font-size)
   pointer-events: none
+.solved .square
+  box-shadow: 0 0 20px rgba(255, 255, 255, 50)
 
 .potential > .value
   font-weight: bold

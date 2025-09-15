@@ -13,11 +13,12 @@ export function Game(props: {
   n: number
   ref: (game: GameType) => void
   potential: string
-  setPotentialValue: (value: number | undefined) => void
+  setPotentialValue: (value: number?) => void
 }): JSX.Element & {randomize: (wantSolvable: boolean) => void}
   state := createMutable
     squares: [] as Square[]
     location: {} as Record<string, Square>
+    showSolved: false
 
   function move(square: Square, x?: number, y?: number): void
     square.x = x if x?
@@ -50,7 +51,11 @@ export function Game(props: {
         }
         state.squares.push square
     move square for each square of state.squares
-    setTimeout (=> randomize true), 0
+    setTimeout
+      =>
+        randomize true
+        state.showSolved = true
+      0
 
   createRenderEffect =>
     {n, potential, setPotentialValue} := props
@@ -98,7 +103,25 @@ export function Game(props: {
   function isSolvable(): boolean
     invariant() % 2 is 0
 
-  function nextToEmpty(square: Square): {dx: number, dy: number} | undefined
+  function solvedClass(): ('solved' | 'near solved')?
+    return unless state.showSolved
+    {n} := props
+    nextToLast := n * n - 2
+    return unless empty().x is n-1 and empty().y is n-1
+    expect .= 0
+    for each y of [0...n]
+      for each x of [0...n]
+        expect++
+        correct := expect is state.location[`${x},${y}`].i
+        if expect < nextToLast
+          return unless correct
+        else if correct
+          return 'solved'
+        else
+          return 'near solved'
+    undefined // should never be reached
+
+  function nextToEmpty(square: Square): {dx: number, dy: number}?
     dx := square.x - empty().x
     dy := square.y - empty().y
     if Math.abs(dx) + Math.abs(dy) is 1
@@ -140,7 +163,7 @@ export function Game(props: {
   shift := createMemo =>
     (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
 
-  <div .game {onClick} style=
+  <div .game {onClick} class=solvedClass() style=
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
   >
