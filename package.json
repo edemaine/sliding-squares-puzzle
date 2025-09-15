@@ -8,13 +8,11 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest",
-    "deploy": "npm run build && gh-pages -d dist"
+    "test": "vitest"
   },
   "license": "MIT",
   "devDependencies": {
     "@danielx/civet": "0.10.6",
-    "gh-pages": "^6.1.1",
     "sass": "^1.70.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
