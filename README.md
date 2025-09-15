@@ -14,6 +14,8 @@ Half of the possible starting positions are solvable,
 and half are not.
 There's a button to generate either type of starting position,
 depending on what you'd like to illustrate.
+And you can display an invariant whose parity determines solvability
+(even is solvable, odd is unsolvable).
 
 You can tell
 [whether a puzzle is solvable](https://en.wikipedia.org/wiki/15_Puzzle#Solvability)
