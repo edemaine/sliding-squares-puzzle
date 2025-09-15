@@ -41,6 +41,6 @@ export function App
         <option value="">Potential function
         <option value="invPlusTaxi"># inversions + taxicab to bottom right
         <option value="invNoEmpty"># inversions, ignoring empty (odd only)
-      <Show when=potentialValue()>
-        (value) => <span .value> =&nbsp;{value()}
+      <Show when=potentialValue()?>
+        (_) => <span .value> =&nbsp;{potentialValue()}
     <a href="https://github.com/edemaine/sliding-squares-puzzle">Source code on GitHub</a>
