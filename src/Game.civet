@@ -96,6 +96,7 @@ export function Game(props: {
     {n} := props
     return 0 if n <= 1
     pi := toPermutation()
+    pi[pi.indexOf 0] = n*n
     inversions := countInversions pi
     taxicab := (n-1 - empty().x) + (n-1 - empty().y)
     inversions + taxicab
