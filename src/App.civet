@@ -14,7 +14,7 @@ export function App
       for entry of entries
         size := entry.borderBoxSize[0]
         setMainSize Math.min size.inlineSize, size.blockSize
-    ||> .observe main
+    ||> .observe main!
 
   <header>
     {n()}<sup>2</sup>&thinsp;&minus;&thinsp;1 = {n()**2-1} Puzzle
@@ -40,5 +40,5 @@ export function App
         <option value="">Potential function
         <option value="invNoEmpty"># inversions, ignoring empty
       <Show when={potentialValue()}>
-        (value) => <span .value> = {value()}
+        (value) => <span .value> =&nbsp;{value()}
     <a href="https://github.com/edemaine/sliding-squares-puzzle">Source code on GitHub</a>
