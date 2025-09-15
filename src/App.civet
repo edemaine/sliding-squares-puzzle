@@ -39,7 +39,8 @@ export function App
         (e) => setPotential e.currentTarget.value
       >
         <option value="">Potential function
-        <option value="invNoEmpty"># inversions, ignoring empty
+        <option value="invPlusTaxi"># inversions + taxicab to bottom right
+        <option value="invNoEmpty"># inversions, ignoring empty (odd only)
       <Show when=potentialValue()>
         (value) => <span .value> =&nbsp;{value()}
     <a href="https://github.com/edemaine/sliding-squares-puzzle">Source code on GitHub</a>
