@@ -24,7 +24,7 @@ But finding the *shortest* solution (fewest moves)
 ## Technology
 
 This implementation is written in the
-[Civet](https://github.com/DanielXMoore/Civet) programming language
+[Civet](https://civet.dev/) programming language
 using the [Solid](https://solidjs.com) web framework,
 [Vite](https://vitejs.dev/) bundler, and
 [Vitest](https://vitest.dev/) testing framework.
