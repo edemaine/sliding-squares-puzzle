@@ -134,22 +134,21 @@ export function Game(props: {
   fillFrac := 0.9
   shift := createMemo =>
     (1 - fillFrac) / props.n * 100 / 2 / (fillFrac / props.n)
-  m1 := -1
 
-  <div .game style={
+  <div .game {onClick} style=
     "--square-size": `calc(${100 * fillFrac / props.n}%)`
     "--font-size": `clamp(1rem, ${0.8 * fillFrac / props.n} * var(--main-size) - 40px, 100rem)`
-  } {onClick}>
+  >
     <For each=state.squares>
       (square) => if square.i
         <div .square style={
           transform: `translate(${square.x * 100 / fillFrac + shift()}%, ${square.y * 100 / fillFrac + shift()}%)`
           cursor: switch nextToEmpty square
             ^undefined then ''
-            {dx:   1} then 'w-resize'
-            {dx: ^m1} then 'e-resize'
-            {dy:   1} then 'n-resize'
-            {dy: ^m1} then 's-resize'
+            {dx:  1} then 'w-resize'
+            {dx: -1} then 'e-resize'
+            {dy:  1} then 'n-resize'
+            {dy: -1} then 's-resize'
         } data-i={square.i}>
           <span .number>{square.i}
   |> as GameType
